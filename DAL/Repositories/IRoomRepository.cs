@@ -12,4 +12,5 @@ public interface IRoomRepository
     Task<bool> ExistsAsync(int id);
     Task<bool> ExistsByNameAsync(string name, int? excludeId = null);
     Task<List<Equipment>> GetAllEquipmentAsync();
+    Task UpdateRoomEquipmentAsync(int roomId, List<int> equipmentIds);
 }

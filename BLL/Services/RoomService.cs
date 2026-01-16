@@ -22,7 +22,7 @@ public class RoomService
         return await _roomRepository.GetByIdAsync(id);
     }
 
-    public async Task<Room> CreateAsync(Room room)
+    public async Task<Room> CreateAsync(Room room, List<int>? equipmentIds = null)
     {
         // Business logic: Validate room name uniqueness
         var exists = await _roomRepository.ExistsByNameAsync(room.Name);
@@ -31,10 +31,18 @@ public class RoomService
             throw new InvalidOperationException($"Room with name '{room.Name}' already exists.");
         }
 
-        return await _roomRepository.CreateAsync(room);
+        var createdRoom = await _roomRepository.CreateAsync(room);
+
+        // Add equipment if provided
+        if (equipmentIds != null && equipmentIds.Any())
+        {
+            await _roomRepository.UpdateRoomEquipmentAsync(createdRoom.Id, equipmentIds);
+        }
+
+        return createdRoom;
     }
 
-    public async Task<bool> UpdateAsync(Room room)
+    public async Task<bool> UpdateAsync(Room room, List<int>? equipmentIds = null)
     {
         // Business logic: Validate room name uniqueness (excluding current room)
         var exists = await _roomRepository.ExistsByNameAsync(room.Name, room.Id);
@@ -43,7 +51,15 @@ public class RoomService
             throw new InvalidOperationException($"Another room with name '{room.Name}' already exists.");
         }
 
-        return await _roomRepository.UpdateAsync(room);
+        var result = await _roomRepository.UpdateAsync(room);
+
+        // Update equipment if provided
+        if (equipmentIds != null)
+        {
+            await _roomRepository.UpdateRoomEquipmentAsync(room.Id, equipmentIds);
+        }
+
+        return result;
     }
 
     public async Task<bool> DeleteAsync(int id)

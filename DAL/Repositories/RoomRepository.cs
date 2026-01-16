@@ -96,4 +96,26 @@ public class RoomRepository : IRoomRepository
             .OrderBy(e => e.Name)
             .ToListAsync();
     }
+
+    public async Task UpdateRoomEquipmentAsync(int roomId, List<int> equipmentIds)
+    {
+        // Remove existing equipment
+        var existingEquipment = await _context.RoomEquipments
+            .Where(re => re.RoomId == roomId)
+            .ToListAsync();
+        _context.RoomEquipments.RemoveRange(existingEquipment);
+
+        // Add new equipment
+        foreach (var equipmentId in equipmentIds)
+        {
+            _context.RoomEquipments.Add(new RoomEquipment
+            {
+                RoomId = roomId,
+                EquipmentId = equipmentId,
+                Quantity = 1
+            });
+        }
+
+        await _context.SaveChangesAsync();
+    }
 }

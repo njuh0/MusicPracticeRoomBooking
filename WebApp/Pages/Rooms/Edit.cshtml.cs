@@ -18,6 +18,8 @@ public class EditModel : PageModel
     [BindProperty]
     public RoomEditModel Input { get; set; } = new();
 
+    public List<Equipment> AvailableEquipment { get; set; } = new();
+
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
@@ -31,13 +33,16 @@ public class EditModel : PageModel
             return NotFound();
         }
 
+        AvailableEquipment = await _roomService.GetAllEquipmentAsync();
+
         Input = new RoomEditModel
         {
             Id = room.Id,
             Name = room.Name,
             Type = room.Type,
             Capacity = room.Capacity,
-            IsSoundproof = room.IsSoundproof
+            IsSoundproof = room.IsSoundproof,
+            SelectedEquipmentIds = room.RoomEquipments.Select(re => re.EquipmentId).ToList()
         };
 
         return Page();
@@ -47,6 +52,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            AvailableEquipment = await _roomService.GetAllEquipmentAsync();
             return Page();
         }
 
@@ -63,12 +69,13 @@ public class EditModel : PageModel
 
         try
         {
-            await _roomService.UpdateAsync(room);
+            await _roomService.UpdateAsync(room, Input.SelectedEquipmentIds);
             return RedirectToPage("./Index");
         }
         catch (InvalidOperationException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
+            AvailableEquipment = await _roomService.GetAllEquipmentAsync();
             return Page();
         }
     }

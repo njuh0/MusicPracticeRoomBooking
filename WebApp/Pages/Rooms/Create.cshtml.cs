@@ -18,14 +18,18 @@ public class CreateModel : PageModel
     [BindProperty]
     public RoomInputModel Input { get; set; } = new();
 
-    public void OnGet()
+    public List<Equipment> AvailableEquipment { get; set; } = new();
+
+    public async Task OnGetAsync()
     {
+        AvailableEquipment = await _roomService.GetAllEquipmentAsync();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
+            AvailableEquipment = await _roomService.GetAllEquipmentAsync();
             return Page();
         }
 
@@ -39,12 +43,13 @@ public class CreateModel : PageModel
 
         try
         {
-            await _roomService.CreateAsync(room);
+            await _roomService.CreateAsync(room, Input.SelectedEquipmentIds);
             return RedirectToPage("./Index");
         }
         catch (InvalidOperationException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
+            AvailableEquipment = await _roomService.GetAllEquipmentAsync();
             return Page();
         }
     }

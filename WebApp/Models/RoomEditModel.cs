@@ -23,4 +23,7 @@ public class RoomEditModel
 
     [Display(Name = "Soundproof")]
     public bool IsSoundproof { get; set; }
+
+    [Display(Name = "Equipment")]
+    public List<int> SelectedEquipmentIds { get; set; } = new();
 }
