@@ -117,6 +117,39 @@ public class BookingRepository : IBookingRepository
         return await query.AnyAsync();
     }
 
+    public async Task<(bool isAvailable, int currentBookings, int capacity)> CheckRoomAvailabilityAsync(int roomId, DateTime startTime, DateTime endTime, int? excludeBookingId = null)
+    {
+        // Get room capacity
+        var room = await _context.Rooms
+            .Where(r => r.Id == roomId && !r.IsDeleted)
+            .FirstOrDefaultAsync();
+
+        if (room == null)
+        {
+            return (false, 0, 0);
+        }
+
+        // Count approved bookings in the time slot
+        var query = _context.Bookings
+            .Where(b => b.RoomId == roomId)
+            .Where(b => b.Status != BookingStatus.Cancelled) // Exclude cancelled
+            .Where(b => !b.RequiresApproval || b.IsApproved) // Only count approved bookings
+            .Where(b => 
+                // Check for overlapping time slots
+                (b.StartTime < endTime && b.EndTime > startTime)
+            );
+
+        if (excludeBookingId.HasValue)
+        {
+            query = query.Where(b => b.Id != excludeBookingId.Value);
+        }
+
+        var currentBookings = await query.CountAsync();
+        var isAvailable = currentBookings < room.Capacity;
+
+        return (isAvailable, currentBookings, room.Capacity);
+    }
+
     public async Task<List<Student>> GetAllStudentsAsync()
     {
         return await _context.Students
