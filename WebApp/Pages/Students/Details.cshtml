@@ -91,7 +91,24 @@
                         </dd>
 
                         <dt class="col-sm-6">Total Logged Hours</dt>
-                        <dd class="col-sm-6">@Model.Student.TotalLoggedHours hours</dd>
+                        <dd class="col-sm-6">
+                            <strong>@Model.Student.TotalLoggedHours</strong> / @Model.Student.MandateLoggedHours hours
+                            @{
+                                var percentage = Model.Student.MandateLoggedHours > 0 
+                                    ? (Model.Student.TotalLoggedHours * 100.0 / Model.Student.MandateLoggedHours) 
+                                    : 0;
+                            }
+                            <div class="progress mt-1" style="height: 20px;">
+                                <div class="progress-bar @(percentage >= 100 ? "bg-success" : percentage >= 50 ? "bg-info" : "bg-warning")" 
+                                     role="progressbar" 
+                                     style="width: @Math.Min(percentage, 100)%"
+                                     aria-valuenow="@Model.Student.TotalLoggedHours" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="@Model.Student.MandateLoggedHours">
+                                    @percentage.ToString("F0")%
+                                </div>
+                            </div>
+                        </dd>
 
                         <dt class="col-sm-6">No-Show Count</dt>
                         <dd class="col-sm-6">

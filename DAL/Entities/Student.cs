@@ -27,6 +27,15 @@ public class Student
     // For graduation tracking
     public int TotalLoggedHours { get; set; } = 0;
     
+    // Mandate hours required for graduation
+    public int MandateLoggedHours => Program switch
+    {
+        StudentProgram.PerformanceMajor => 200,
+        StudentProgram.EducationMajor => 150,
+        StudentProgram.Minor => 100,
+        _ => 0
+    };
+    
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? ModifiedAt { get; set; }
