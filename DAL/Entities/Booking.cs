@@ -22,8 +22,14 @@ public class Booking
     public bool IsNoShow { get; set; } = false;
     public DateTime? CheckedInAt { get; set; }
     
+    // Audit fields
     public DateTime CreatedAt { get; set; }
+    public DateTime? ModifiedAt { get; set; }
     public DateTime? CancelledAt { get; set; }
+    
+    // Soft delete fields
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; }
     
     // Calculated property
     public int DurationHours => (int)Math.Ceiling((EndTime - StartTime).TotalHours);

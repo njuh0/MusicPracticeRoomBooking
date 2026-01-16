@@ -8,6 +8,14 @@ public class Room
     public int Capacity { get; set; } // Number of people
     public bool IsSoundproof { get; set; }
     
+    // Audit fields
+    public DateTime CreatedAt { get; set; }
+    public DateTime? ModifiedAt { get; set; }
+    
+    // Soft delete fields
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; }
+    
     // Navigation properties
     public ICollection<RoomEquipment> RoomEquipments { get; set; } = new List<RoomEquipment>();
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

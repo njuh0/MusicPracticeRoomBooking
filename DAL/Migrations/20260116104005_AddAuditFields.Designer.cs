@@ -3,6 +3,7 @@ using System;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260116104005_AddAuditFields")]
+    partial class AddAuditFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -38,16 +41,10 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsApproved")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsNoShow")
@@ -96,15 +93,9 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("TEXT");
@@ -131,9 +122,6 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -143,9 +131,6 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -174,12 +159,6 @@ namespace DAL.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsSoundproof")
                         .HasColumnType("INTEGER");
@@ -214,12 +193,6 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("TEXT");
 
@@ -242,9 +215,6 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -256,9 +226,6 @@ namespace DAL.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("InstructorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")

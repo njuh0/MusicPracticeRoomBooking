@@ -27,6 +27,14 @@ public class Student
     // For graduation tracking
     public int TotalLoggedHours { get; set; } = 0;
     
+    // Audit fields
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? ModifiedAt { get; set; }
+    
+    // Soft delete fields
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; }
+    
     // Navigation
     public int? InstructorId { get; set; }
     public Instructor? Instructor { get; set; }

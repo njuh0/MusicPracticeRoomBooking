@@ -105,5 +105,57 @@ public class AppDbContext : DbContext
             // Ignore calculated property
             entity.Ignore(b => b.DurationHours);
         });
+        
+        // Global query filters for soft delete
+        modelBuilder.Entity<Student>().HasQueryFilter(s => !s.IsDeleted);
+        modelBuilder.Entity<Instructor>().HasQueryFilter(i => !i.IsDeleted);
+        modelBuilder.Entity<Room>().HasQueryFilter(r => !r.IsDeleted);
+        modelBuilder.Entity<Equipment>().HasQueryFilter(e => !e.IsDeleted);
+        modelBuilder.Entity<Booking>().HasQueryFilter(b => !b.IsDeleted);
+        modelBuilder.Entity<RoomEquipment>().HasQueryFilter(re => !re.IsDeleted);
+    }
+    
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        foreach (var entry in entries)
+        {
+            var now = DateTime.UtcNow;
+            
+            if (entry.State == EntityState.Added)
+            {
+                if (entry.Entity is Student student)
+                    student.CreatedAt = now;
+                else if (entry.Entity is Booking booking)
+                    booking.CreatedAt = now;
+                else if (entry.Entity is Room room)
+                    room.CreatedAt = now;
+                else if (entry.Entity is Instructor instructor)
+                    instructor.CreatedAt = now;
+                else if (entry.Entity is Equipment equipment)
+                    equipment.CreatedAt = now;
+                else if (entry.Entity is RoomEquipment roomEquipment)
+                    roomEquipment.CreatedAt = now;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                if (entry.Entity is Student student)
+                    student.ModifiedAt = now;
+                else if (entry.Entity is Booking booking)
+                    booking.ModifiedAt = now;
+                else if (entry.Entity is Room room)
+                    room.ModifiedAt = now;
+                else if (entry.Entity is Instructor instructor)
+                    instructor.ModifiedAt = now;
+                else if (entry.Entity is Equipment equipment)
+                    equipment.ModifiedAt = now;
+                else if (entry.Entity is RoomEquipment roomEquipment)
+                    roomEquipment.ModifiedAt = now;
+            }
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
