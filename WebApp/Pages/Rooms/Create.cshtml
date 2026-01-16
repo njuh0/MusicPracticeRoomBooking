@@ -1,0 +1,74 @@
+@page
+@model WebApp.Pages.Rooms.CreateModel
+@{
+    ViewData["Title"] = "Create Room";
+}
+
+<div class="container mt-4">
+    <h1>Create New Room</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post" class="card">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Name" class="form-label"></label>
+                        <input asp-for="Input.Name" class="form-control" placeholder="e.g., Room 101" />
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Type" class="form-label"></label>
+                        <select asp-for="Input.Type" class="form-select" asp-items="Html.GetEnumSelectList<DAL.Entities.RoomType>()">
+                            <option value="">-- Select Room Type --</option>
+                        </select>
+                        <span asp-validation-for="Input.Type" class="text-danger"></span>
+                        <div class="form-text">Small (1-2 people), Medium (3-5 people), Large (6+ people)</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Capacity" class="form-label"></label>
+                        <input asp-for="Input.Capacity" type="number" class="form-control" min="1" max="50" />
+                        <span asp-validation-for="Input.Capacity" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Input.IsSoundproof" type="checkbox" class="form-check-input" />
+                        <label asp-for="Input.IsSoundproof" class="form-check-label"></label>
+                        <span asp-validation-for="Input.IsSoundproof" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Create
+                        </button>
+                        <a asp-page="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Guidelines</h5>
+                    <ul class="mb-0">
+                        <li><strong>Room names</strong> must be unique (e.g., Room 101, Studio A)</li>
+                        <li><strong>Small rooms</strong>: Solo practice (1-2 people)</li>
+                        <li><strong>Medium rooms</strong>: Small ensembles (3-5 people)</li>
+                        <li><strong>Large rooms</strong>: Orchestras, bands (6+ people)</li>
+                        <li><strong>Soundproof</strong> rooms are recommended for drums and brass</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

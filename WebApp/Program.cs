@@ -14,9 +14,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register DAL Repositories
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 // Register BLL Services
 builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<RoomService>();
 
 var app = builder.Build();
 
