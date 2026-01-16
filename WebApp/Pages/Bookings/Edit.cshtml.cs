@@ -91,7 +91,7 @@ public class EditModel : PageModel
     {
         var students = await _bookingService.GetAllStudentsAsync();
         StudentSelectList = new SelectList(
-            students.Select(s => new { s.Id, DisplayName = $"{s.FirstName} {s.LastName}" }),
+            students.Select(s => new { s.Id, DisplayName = $"{s.FirstName} {s.LastName} ({s.PrimaryInstrument})" }),
             "Id",
             "DisplayName"
         );

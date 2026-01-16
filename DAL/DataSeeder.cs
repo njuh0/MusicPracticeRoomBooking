@@ -90,30 +90,96 @@ public class DataSeeder
         // Seed RoomEquipments - assign equipment to rooms
         var roomEquipments = new List<RoomEquipment>();
         
-        // Small rooms - mix of grand pianos, upright pianos, and drums
-        // Rooms 101-105: Grand Pianos
-        for (int i = 0; i < 5; i++)
+        // Small rooms - diverse instruments
+        // Room 101: Grand Piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[0].Id, EquipmentId = equipment[0].Id, Quantity = 1 }); // Steinway Grand
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[0].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 102: Upright Piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[1].Id, EquipmentId = equipment[2].Id, Quantity = 1 }); // Upright piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[1].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 103: Guitar
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[2].Id, EquipmentId = equipment[10].Id, Quantity = 1 }); // Guitar
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[2].Id, EquipmentId = equipment[5].Id, Quantity = 1 }); // Amplifier
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[2].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 104: Violin
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[3].Id, EquipmentId = equipment[8].Id, Quantity = 1 }); // Violin
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[3].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 105: Cello
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[4].Id, EquipmentId = equipment[9].Id, Quantity = 1 }); // Cello
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[4].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 106: Upright Piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[5].Id, EquipmentId = equipment[3].Id, Quantity = 1 }); // Upright piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[5].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 107: Flute
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[6].Id, EquipmentId = equipment[13].Id, Quantity = 1 }); // Flute
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[6].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 108: Grand Piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[7].Id, EquipmentId = equipment[1].Id, Quantity = 1 }); // Yamaha Grand
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[7].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 109: Violin
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[8].Id, EquipmentId = equipment[8].Id, Quantity = 1 }); // Violin
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[8].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 110: Guitar
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[9].Id, EquipmentId = equipment[10].Id, Quantity = 1 }); // Guitar
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[9].Id, EquipmentId = equipment[5].Id, Quantity = 1 }); // Amplifier
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[9].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Rooms 111-113: Drums (soundproof)
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[10].Id, EquipmentId = equipment[4].Id, Quantity = 1 }); // Drum kit
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[10].Id, EquipmentId = equipment[5].Id, Quantity = 1 }); // Amplifier
+        
+        // Room 112: Trumpet (soundproof)
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[11].Id, EquipmentId = equipment[11].Id, Quantity = 1 }); // Trumpet
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[11].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 113: Saxophone (soundproof)
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[12].Id, EquipmentId = equipment[12].Id, Quantity = 1 }); // Saxophone
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[12].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+        
+        // Room 114: Drums (soundproof)
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[13].Id, EquipmentId = equipment[4].Id, Quantity = 1 }); // Drum kit
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[13].Id, EquipmentId = equipment[5].Id, Quantity = 1 }); // Amplifier
+        
+        // Room 115: ALL instruments
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[0].Id, Quantity = 1 }); // Grand piano
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[4].Id, Quantity = 1 }); // Drums
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[5].Id, Quantity = 1 }); // Amplifier
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[6].Id, Quantity = 2 }); // Microphones
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[7].Id, Quantity = 4 }); // Music stands
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[8].Id, Quantity = 1 }); // Violin
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[9].Id, Quantity = 1 }); // Cello
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[10].Id, Quantity = 1 }); // Guitar
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[11].Id, Quantity = 1 }); // Trumpet
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[12].Id, Quantity = 1 }); // Saxophone
+        roomEquipments.Add(new RoomEquipment { RoomId = rooms[14].Id, EquipmentId = equipment[13].Id, Quantity = 1 }); // Flute
+        
+        // Medium rooms 201-202: ALL instruments
+        for (int i = 15; i < 17; i++)
         {
-            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[i % 2].Id, Quantity = 1 }); // Grand pianos
-            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[0].Id, Quantity = 1 }); // Grand piano
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[4].Id, Quantity = 1 }); // Drums
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[5].Id, Quantity = 2 }); // Amplifiers
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[6].Id, Quantity = 2 }); // Microphones
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[7].Id, Quantity = 4 }); // Music stands
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[8].Id, Quantity = 1 }); // Violin
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[9].Id, Quantity = 1 }); // Cello
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[10].Id, Quantity = 1 }); // Guitar
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[11].Id, Quantity = 1 }); // Trumpet
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[12].Id, Quantity = 1 }); // Saxophone
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[13].Id, Quantity = 1 }); // Flute
         }
         
-        // Rooms 106-110: Upright Pianos
-        for (int i = 5; i < 10; i++)
-        {
-            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[2 + (i % 2)].Id, Quantity = 1 }); // Upright pianos
-            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[7].Id, Quantity = 1 }); // Music stand
-        }
-        
-        // Rooms 111-115: Drums and soundproof rooms
-        for (int i = 10; i < 15; i++)
-        {
-            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[4].Id, Quantity = 1 }); // Drum kit
-            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[5].Id, Quantity = 1 }); // Amplifier
-        }
-        
-        // Medium rooms - ensemble setup with multiple stands and piano
-        for (int i = 15; i < 21; i++)
+        // Medium rooms 203-206: ensemble setup
+        for (int i = 17; i < 21; i++)
         {
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[3].Id, Quantity = 1 }); // Upright piano
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[7].Id, Quantity = 4 }); // Music stands
