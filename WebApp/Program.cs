@@ -15,10 +15,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Register DAL Repositories
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 // Register BLL Services
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<BookingService>();
 
 var app = builder.Build();
 

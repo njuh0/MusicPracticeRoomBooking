@@ -1,0 +1,175 @@
+@page
+@model WebApp.Pages.Bookings.DetailsModel
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Booking Details</h1>
+        <a asp-page="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Booking Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Student</dt>
+                        <dd class="col-sm-8">
+                            <a asp-page="/Students/Details" asp-route-id="@Model.Booking.StudentId">
+                                @Model.Booking.Student.FirstName @Model.Booking.Student.LastName
+                            </a>
+                            <br/><small class="text-muted">@Model.Booking.Student.StudentNumber</small>
+                        </dd>
+
+                        <dt class="col-sm-4">Room</dt>
+                        <dd class="col-sm-8">
+                            <a asp-page="/Rooms/Details" asp-route-id="@Model.Booking.RoomId">
+                                @Model.Booking.Room.Name
+                            </a>
+                            <br/><small class="text-muted">@Model.Booking.Room.Type (@Model.Booking.Room.Capacity people)</small>
+                        </dd>
+
+                        <dt class="col-sm-4">Date</dt>
+                        <dd class="col-sm-8">@Model.Booking.StartTime.ToString("MMMM dd, yyyy")</dd>
+
+                        <dt class="col-sm-4">Time Slot</dt>
+                        <dd class="col-sm-8">
+                            @Model.Booking.StartTime.ToString("HH:mm") - @Model.Booking.EndTime.ToString("HH:mm")
+                            <span class="badge bg-info">@Model.Booking.DurationHours hours</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Purpose</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-@(Model.Booking.Purpose == DAL.Entities.BookingPurpose.RecitalPrep ? "warning" : Model.Booking.Purpose == DAL.Entities.BookingPurpose.EnsembleRehearsal ? "info" : "secondary")">
+                                @Model.Booking.Purpose
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-@(Model.Booking.Status == DAL.Entities.BookingStatus.Confirmed ? "success" : Model.Booking.Status == DAL.Entities.BookingStatus.Cancelled ? "danger" : Model.Booking.Status == DAL.Entities.BookingStatus.NoShow ? "warning" : "info")">
+                                @Model.Booking.Status
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Created</dt>
+                        <dd class="col-sm-8">@Model.Booking.CreatedAt.ToString("MMM dd, yyyy HH:mm")</dd>
+
+                        @if (Model.Booking.CheckedInAt.HasValue)
+                        {
+                            <dt class="col-sm-4">Checked In</dt>
+                            <dd class="col-sm-8">
+                                <span class="text-success">
+                                    <i class="bi bi-check-circle"></i> @Model.Booking.CheckedInAt.Value.ToString("MMM dd, yyyy HH:mm")
+                                </span>
+                            </dd>
+                        }
+
+                        @if (Model.Booking.CancelledAt.HasValue)
+                        {
+                            <dt class="col-sm-4">Cancelled</dt>
+                            <dd class="col-sm-8">
+                                <span class="text-danger">
+                                    @Model.Booking.CancelledAt.Value.ToString("MMM dd, yyyy HH:mm")
+                                </span>
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            @if (Model.Booking.RequiresApproval)
+            {
+                <div class="card mb-3">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-shield-check"></i> Approval Status</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Booking.IsApproved)
+                        {
+                            <div class="alert alert-success mb-0">
+                                <i class="bi bi-check-circle"></i>
+                                <strong>Approved</strong> by @Model.Booking.ApprovedByInstructor?.FirstName @Model.Booking.ApprovedByInstructor?.LastName
+                                <br/><small>on @Model.Booking.ApprovedAt?.ToString("MMM dd, yyyy HH:mm")</small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mb-0">
+                                <i class="bi bi-clock"></i>
+                                <strong>Pending Approval</strong><br/>
+                                This recital prep booking requires instructor approval.
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-tools"></i> Room Equipment</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Booking.Room.RoomEquipments.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var re in Model.Booking.Room.RoomEquipments)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <i class="bi bi-box"></i> @re.Equipment.Name
+                                    </span>
+                                    <span class="badge bg-primary rounded-pill">×@re.Quantity</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No equipment available in this room.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="bi bi-gear"></i> Actions</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex gap-2">
+                @if (Model.Booking.Status == DAL.Entities.BookingStatus.Confirmed && !Model.Booking.CheckedInAt.HasValue)
+                {
+                    <form method="post" asp-page-handler="CheckIn" asp-route-id="@Model.Booking.Id" class="d-inline">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Check In
+                        </button>
+                    </form>
+                }
+
+                @if (Model.Booking.Status == DAL.Entities.BookingStatus.Confirmed)
+                {
+                    <form method="post" asp-page-handler="Cancel" asp-route-id="@Model.Booking.Id" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-x-circle"></i> Cancel Booking
+                        </button>
+                    </form>
+                }
+
+                <a asp-page="Delete" asp-route-id="@Model.Booking.Id" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

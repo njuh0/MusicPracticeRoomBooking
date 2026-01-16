@@ -1,0 +1,106 @@
+@page
+@model WebApp.Pages.Bookings.CreateModel
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<div class="container mt-4">
+    <h1>Create New Booking</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post" class="card">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.StudentId" class="form-label"></label>
+                        <select asp-for="Input.StudentId" class="form-select" asp-items="Model.StudentSelectList">
+                            <option value="">-- Select Student --</option>
+                        </select>
+                        <span asp-validation-for="Input.StudentId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.RoomId" class="form-label"></label>
+                        <select asp-for="Input.RoomId" class="form-select" asp-items="Model.RoomSelectList">
+                            <option value="">-- Select Room --</option>
+                        </select>
+                        <span asp-validation-for="Input.RoomId" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.StartTime" class="form-label"></label>
+                            <input asp-for="Input.StartTime" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="Input.StartTime" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.EndTime" class="form-label"></label>
+                            <input asp-for="Input.EndTime" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="Input.EndTime" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Purpose" class="form-label"></label>
+                        <select asp-for="Input.Purpose" class="form-select" asp-items="Html.GetEnumSelectList<DAL.Entities.BookingPurpose>()">
+                            <option value="">-- Select Purpose --</option>
+                        </select>
+                        <span asp-validation-for="Input.Purpose" class="text-danger"></span>
+                        <div class="form-text">Recital Prep requires instructor approval and must be booked 3+ hours in advance.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.ApprovedByInstructorId" class="form-label"></label>
+                        <select asp-for="Input.ApprovedByInstructorId" class="form-select" asp-items="Model.InstructorSelectList">
+                            <option value="">-- Select Instructor (Optional) --</option>
+                        </select>
+                        <span asp-validation-for="Input.ApprovedByInstructorId" class="text-danger"></span>
+                        <div class="form-text">Required for Recital Prep bookings.</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Create Booking
+                        </button>
+                        <a asp-page="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Booking Guidelines</h5>
+                    <ul class="mb-0">
+                        <li><strong>Regular Practice</strong>: For individual practice sessions</li>
+                        <li><strong>Recital Prep</strong>: Must be booked 3+ hours in advance, requires instructor approval</li>
+                        <li><strong>Ensemble Rehearsal</strong>: For group practice</li>
+                        <li>Bookings must be made for future times</li>
+                        <li>Room availability is checked automatically</li>
+                        <li>Check your weekly practice quota before booking</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card bg-warning bg-opacity-10 mt-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-exclamation-triangle"></i> Important</h5>
+                    <p class="mb-0">
+                        <strong>No-shows</strong> are tracked and may result in quota penalties. 
+                        Please check in when you arrive, or cancel bookings you cannot attend.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
