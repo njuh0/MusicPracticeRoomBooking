@@ -12,6 +12,31 @@
         </a>
     </div>
 
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="SearchTerm" value="@Model.SearchTerm" 
+                           placeholder="Search by room name..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" name="RoomTypeFilter" asp-items="Model.RoomTypeOptions">
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a asp-page="Index" class="btn btn-secondary w-100">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            </div>
+        </div>
+    </form>
+
     @if (!Model.Rooms.Any())
     {
         <div class="alert alert-info">
