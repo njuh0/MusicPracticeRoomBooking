@@ -13,6 +13,7 @@ public interface IBookingRepository
     Task<bool> DeleteAsync(int id);
     Task<bool> ExistsAsync(int id);
     Task<bool> HasTimeConflictAsync(int roomId, DateTime startTime, DateTime endTime, int? excludeBookingId = null);
+    Task<(bool isAvailable, int currentBookings, int capacity)> CheckRoomAvailabilityAsync(int roomId, DateTime startTime, DateTime endTime, int? excludeBookingId = null);
     Task<List<Student>> GetAllStudentsAsync();
     Task<Student?> GetStudentByIdAsync(int studentId);
     Task<List<Room>> GetAllRoomsAsync();

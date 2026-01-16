@@ -48,9 +48,6 @@ public class StudentService
 
     public async Task<bool> DeleteAsync(int id)
     {
-        // Business logic can be added here
-        // Example: check for active bookings before deletion
-        
         return await _studentRepository.DeleteAsync(id);
     }
 
@@ -64,14 +61,4 @@ public class StudentService
         return await _studentRepository.GetAllInstructorsAsync();
     }
 
-    // Example of business logic that will be implemented here:
-    // public async Task<bool> CanBookRoomAsync(int studentId, DateTime startTime, int durationHours)
-    // {
-    //     var student = await GetByIdAsync(studentId);
-    //     if (student == null) return false;
-    //     
-    //     // Check quota availability
-    //     var weeklyUsage = await CalculateWeeklyUsageAsync(studentId);
-    //     return (weeklyUsage + durationHours) <= student.EffectiveWeeklyQuota;
-    // }
 }
