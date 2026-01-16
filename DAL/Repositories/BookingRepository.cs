@@ -125,6 +125,12 @@ public class BookingRepository : IBookingRepository
             .ToListAsync();
     }
 
+    public async Task<Student?> GetStudentByIdAsync(int studentId)
+    {
+        return await _context.Students
+            .FirstOrDefaultAsync(s => s.Id == studentId && !s.IsDeleted);
+    }
+
     public async Task<List<Room>> GetAllRoomsAsync()
     {
         return await _context.Rooms
@@ -140,13 +146,26 @@ public class BookingRepository : IBookingRepository
             .ToListAsync();
     }
 
-    public async Task<int> MarkExpiredBookingsAsNoShowAsync()
+    public async Task<List<int>> MarkExpiredBookingsAsNoShowAsync()
     {
-        return await _context.Bookings
+        // Get bookings that need to be marked as NoShow before updating
+        var expiredBookings = await _context.Bookings
+            .Where(b => b.Status == BookingStatus.Confirmed
+                     && b.EndTime < DateTime.UtcNow
+                     && !b.CheckedInAt.HasValue
+                     && !b.IsDeleted)
+            .Select(b => b.StudentId)
+            .Distinct()
+            .ToListAsync();
+
+        // Update bookings to NoShow status
+        await _context.Bookings
             .Where(b => b.Status == BookingStatus.Confirmed
                      && b.EndTime < DateTime.UtcNow
                      && !b.CheckedInAt.HasValue
                      && !b.IsDeleted)
             .ExecuteUpdateAsync(b => b.SetProperty(x => x.Status, BookingStatus.NoShow));
+
+        return expiredBookings;
     }
 }

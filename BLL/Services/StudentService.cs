@@ -24,16 +24,24 @@ public class StudentService
 
     public async Task<Student> CreateAsync(Student student)
     {
-        // Business logic validation can be added here
-        // Example: check email uniqueness, StudentNumber validation, etc.
+        // Business logic: Check email uniqueness
+        var emailExists = await _studentRepository.ExistsByEmailAsync(student.Email);
+        if (emailExists)
+        {
+            throw new InvalidOperationException($"Email '{student.Email}' is already in use by another student.");
+        }
         
         return await _studentRepository.CreateAsync(student);
     }
 
     public async Task<bool> UpdateAsync(Student student)
     {
-        // Business logic can be added here
-        // Example: recalculate quotas, validate program changes, etc.
+        // Business logic: Check email uniqueness (excluding current student)
+        var emailExists = await _studentRepository.ExistsByEmailAsync(student.Email, student.Id);
+        if (emailExists)
+        {
+            throw new InvalidOperationException($"Email '{student.Email}' is already in use by another student.");
+        }
         
         return await _studentRepository.UpdateAsync(student);
     }

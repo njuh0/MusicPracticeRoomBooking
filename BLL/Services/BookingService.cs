@@ -6,16 +6,18 @@ namespace BLL.Services;
 public class BookingService
 {
     private readonly IBookingRepository _bookingRepository;
+    private readonly IStudentRepository _studentRepository;
 
-    public BookingService(IBookingRepository bookingRepository)
+    public BookingService(IBookingRepository bookingRepository, IStudentRepository studentRepository)
     {
         _bookingRepository = bookingRepository;
+        _studentRepository = studentRepository;
     }
 
     public async Task<List<Booking>> GetAllAsync()
     {
-        // Automatically mark NoShows before returning bookings
-        await _bookingRepository.MarkExpiredBookingsAsNoShowAsync();
+        // Automatically mark NoShows and apply penalties before returning bookings
+        await MarkNoShowsAndApplyPenaltiesAsync();
         return await _bookingRepository.GetAllAsync();
     }
 
@@ -26,13 +28,25 @@ public class BookingService
 
     public async Task<List<Booking>> GetByStudentIdAsync(int studentId)
     {
-        await _bookingRepository.MarkExpiredBookingsAsNoShowAsync();
+        await MarkNoShowsAndApplyPenaltiesAsync();
         return await _bookingRepository.GetByStudentIdAsync(studentId);
     }
 
     public async Task<List<Booking>> GetByRoomIdAsync(int roomId)
     {
         return await _bookingRepository.GetByRoomIdAsync(roomId);
+    }
+
+    private async Task MarkNoShowsAndApplyPenaltiesAsync()
+    {
+        // Mark expired bookings as NoShow and get affected student IDs
+        var studentIds = await _bookingRepository.MarkExpiredBookingsAsNoShowAsync();
+
+        // Increment NoShowCount for each affected student (includes penalty logic)
+        foreach (var studentId in studentIds)
+        {
+            await _studentRepository.IncrementNoShowCountAsync(studentId);
+        }
     }
 
     public async Task<Booking> CreateAsync(Booking booking)
@@ -47,6 +61,31 @@ public class BookingService
         if (booking.EndTime <= booking.StartTime)
         {
             throw new InvalidOperationException("End time must be after start time.");
+        }
+
+        // Business logic: Check weekly quota
+        var student = await _bookingRepository.GetStudentByIdAsync(booking.StudentId);
+        if (student != null)
+        {
+            var weekStart = GetStartOfWeek(DateTime.UtcNow);
+            var weekEnd = weekStart.AddDays(7);
+
+            var weeklyBookings = await _bookingRepository.GetByStudentIdAsync(booking.StudentId);
+            var weeklyHours = weeklyBookings
+                .Where(b => b.Status != BookingStatus.Cancelled 
+                         && b.StartTime >= weekStart 
+                         && b.StartTime < weekEnd)
+                .Sum(b => (b.EndTime - b.StartTime).TotalHours);
+
+            var newBookingHours = (booking.EndTime - booking.StartTime).TotalHours;
+            var totalHours = weeklyHours + newBookingHours;
+
+            if (totalHours > student.EffectiveWeeklyQuota)
+            {
+                throw new InvalidOperationException(
+                    $"Weekly quota exceeded: {totalHours:F1}/{student.EffectiveWeeklyQuota} hours. " +
+                    $"This booking requires {newBookingHours:F1} hours.");
+            }
         }
 
         // Business logic: Check for room time conflicts
@@ -77,6 +116,13 @@ public class BookingService
         booking.Status = BookingStatus.Confirmed;
 
         return await _bookingRepository.CreateAsync(booking);
+    }
+
+    private DateTime GetStartOfWeek(DateTime date)
+    {
+        // Start of week is Monday
+        int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+        return date.AddDays(-1 * diff).Date;
     }
 
     public async Task<bool> UpdateAsync(Booking booking)

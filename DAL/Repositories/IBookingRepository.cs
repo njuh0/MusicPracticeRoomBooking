@@ -14,7 +14,8 @@ public interface IBookingRepository
     Task<bool> ExistsAsync(int id);
     Task<bool> HasTimeConflictAsync(int roomId, DateTime startTime, DateTime endTime, int? excludeBookingId = null);
     Task<List<Student>> GetAllStudentsAsync();
+    Task<Student?> GetStudentByIdAsync(int studentId);
     Task<List<Room>> GetAllRoomsAsync();
     Task<List<Instructor>> GetAllInstructorsAsync();
-    Task<int> MarkExpiredBookingsAsNoShowAsync();
+    Task<List<int>> MarkExpiredBookingsAsNoShowAsync();
 }

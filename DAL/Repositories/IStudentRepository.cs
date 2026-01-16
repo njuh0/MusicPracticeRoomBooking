@@ -10,5 +10,7 @@ public interface IStudentRepository
     Task<bool> UpdateAsync(Student student);
     Task<bool> DeleteAsync(int id);
     Task<bool> ExistsAsync(int id);
+    Task<bool> ExistsByEmailAsync(string email, int? excludeStudentId = null);
+    Task<bool> IncrementNoShowCountAsync(int studentId);
     Task<List<Instructor>> GetAllInstructorsAsync();
 }

@@ -79,6 +79,38 @@ public class StudentRepository : IStudentRepository
         return await _context.Students.AnyAsync(s => s.Id == id && !s.IsDeleted);
     }
 
+    public async Task<bool> ExistsByEmailAsync(string email, int? excludeStudentId = null)
+    {
+        var query = _context.Students.Where(s => !s.IsDeleted && s.Email.ToLower() == email.ToLower());
+        
+        if (excludeStudentId.HasValue)
+        {
+            query = query.Where(s => s.Id != excludeStudentId.Value);
+        }
+        
+        return await query.AnyAsync();
+    }
+
+    public async Task<bool> IncrementNoShowCountAsync(int studentId)
+    {
+        var student = await _context.Students.FindAsync(studentId);
+        if (student == null || student.IsDeleted)
+        {
+            return false;
+        }
+
+        student.NoShowCount++;
+        
+        // Apply penalty: every 3 NoShows = -1 hour quota
+        if (student.NoShowCount % 3 == 0)
+        {
+            student.QuotaPenaltyHours++;
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<List<Instructor>> GetAllInstructorsAsync()
     {
         return await _context.Instructors
