@@ -4,7 +4,50 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Music Practice Room Booking</h1>
+        <p class="lead">Manage your practice sessions, rooms, and students</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-check display-1 text-primary mb-3"></i>
+                    <h5 class="card-title">Bookings</h5>
+                    <p class="card-text">Create and manage practice room bookings</p>
+                    <a asp-page="/Bookings/Index" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right-circle"></i> View Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-door-open display-1 text-success mb-3"></i>
+                    <h5 class="card-title">Rooms</h5>
+                    <p class="card-text">Browse and manage practice rooms</p>
+                    <a asp-page="/Rooms/Index" class="btn btn-success w-100">
+                        <i class="bi bi-arrow-right-circle"></i> View Rooms
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-people display-1 text-info mb-3"></i>
+                    <h5 class="card-title">Students</h5>
+                    <p class="card-text">Manage student profiles and quotas</p>
+                    <a asp-page="/Students/Index" class="btn btn-info w-100">
+                        <i class="bi bi-arrow-right-circle"></i> View Students
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

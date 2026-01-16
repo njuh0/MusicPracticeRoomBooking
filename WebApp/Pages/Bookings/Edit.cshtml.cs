@@ -67,11 +67,21 @@ public class EditModel : PageModel
         booking.Purpose = Input.Purpose;
         booking.ApprovedByInstructorId = Input.ApprovedByInstructorId;
 
-        // If instructor is added and booking requires approval, mark as approved
-        if (booking.RequiresApproval && Input.ApprovedByInstructorId.HasValue && !booking.IsApproved)
+        // Handle approval logic
+        if (booking.RequiresApproval)
         {
-            booking.IsApproved = true;
-            booking.ApprovedAt = DateTime.UtcNow;
+            if (Input.ApprovedByInstructorId.HasValue && !booking.IsApproved)
+            {
+                // Instructor added - mark as approved
+                booking.IsApproved = true;
+                booking.ApprovedAt = DateTime.UtcNow;
+            }
+            else if (!Input.ApprovedByInstructorId.HasValue && booking.IsApproved)
+            {
+                // Instructor removed - revoke approval
+                booking.IsApproved = false;
+                booking.ApprovedAt = null;
+            }
         }
 
         try
