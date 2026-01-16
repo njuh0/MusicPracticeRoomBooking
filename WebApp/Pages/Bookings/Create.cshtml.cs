@@ -63,11 +63,9 @@ public class CreateModel : PageModel
     {
         var students = await _bookingService.GetAllStudentsAsync();
         StudentSelectList = new SelectList(
-            students,
-            nameof(Student.Id),
-            nameof(Student.FirstName),
-            null,
-            nameof(Student.LastName)
+            students.Select(s => new { s.Id, DisplayName = $"{s.FirstName} {s.LastName}" }),
+            "Id",
+            "DisplayName"
         );
 
         var rooms = await _bookingService.GetAllRoomsAsync();
@@ -75,11 +73,9 @@ public class CreateModel : PageModel
 
         var instructors = await _bookingService.GetAllInstructorsAsync();
         InstructorSelectList = new SelectList(
-            instructors,
-            nameof(Instructor.Id),
-            nameof(Instructor.FirstName),
-            null,
-            nameof(Instructor.LastName)
+            instructors.Select(i => new { i.Id, DisplayName = $"{i.FirstName} {i.LastName}" }),
+            "Id",
+            "DisplayName"
         );
     }
 }

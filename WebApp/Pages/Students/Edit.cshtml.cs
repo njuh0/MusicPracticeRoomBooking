@@ -90,6 +90,10 @@ public class EditModel : PageModel
     private async Task LoadInstructorsAsync()
     {
         var instructors = await _studentService.GetAllInstructorsAsync();
-        InstructorSelectList = new SelectList(instructors, "Id", "LastName");
+        InstructorSelectList = new SelectList(
+            instructors.Select(i => new { i.Id, DisplayName = $"{i.FirstName} {i.LastName}" }),
+            "Id",
+            "DisplayName"
+        );
     }
 }
