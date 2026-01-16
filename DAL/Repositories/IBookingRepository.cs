@@ -16,6 +16,7 @@ public interface IBookingRepository
     Task<List<Student>> GetAllStudentsAsync();
     Task<Student?> GetStudentByIdAsync(int studentId);
     Task<List<Room>> GetAllRoomsAsync();
+    Task<Room?> GetRoomByIdAsync(int roomId);
     Task<List<Instructor>> GetAllInstructorsAsync();
     Task<List<int>> MarkExpiredBookingsAsNoShowAsync();
 }

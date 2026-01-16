@@ -26,5 +26,11 @@ public enum EquipmentType
     Drums = 3,
     Amplifier = 4,
     Microphone = 5,
-    MusicStand = 6
+    MusicStand = 6,
+    Violin = 7,
+    Cello = 8,
+    Guitar = 9,
+    Trumpet = 10,
+    Saxophone = 11,
+    Flute = 12
 }

@@ -6,6 +6,8 @@ namespace WebApp.Models;
 
 public class BookingInputModel
 {
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "Student is required")]
     [Display(Name = "Student")]
     public int StudentId { get; set; }

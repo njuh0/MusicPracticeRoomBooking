@@ -63,8 +63,84 @@ public class BookingService
             throw new InvalidOperationException("End time must be after start time.");
         }
 
-        // Business logic: Check weekly quota
+        // Business logic: Validate booking duration based on purpose
+        var duration = (booking.EndTime - booking.StartTime).TotalHours;
+        var maxDuration = booking.Purpose switch
+        {
+            BookingPurpose.RegularPractice => 2,
+            BookingPurpose.RecitalPrep => 3,
+            BookingPurpose.EnsembleRehearsal => 4,
+            _ => 2
+        };
+
+        if (duration > maxDuration)
+        {
+            throw new InvalidOperationException(
+                $"{booking.Purpose} bookings cannot exceed {maxDuration} hours. Requested: {duration:F1} hours."
+            );
+        }
+
+        // Business logic: Validate room type matches booking purpose
+        var room = await _bookingRepository.GetRoomByIdAsync(booking.RoomId);
+        if (room != null)
+        {
+            var isValidRoomType = booking.Purpose switch
+            {
+                BookingPurpose.RegularPractice => room.Type == RoomType.Small || room.Type == RoomType.Medium,
+                BookingPurpose.RecitalPrep => room.Type == RoomType.Medium || room.Type == RoomType.Large,
+                BookingPurpose.EnsembleRehearsal => room.Type == RoomType.Large,
+                _ => true
+            };
+
+            if (!isValidRoomType)
+            {
+                var allowedTypes = booking.Purpose switch
+                {
+                    BookingPurpose.RegularPractice => "Small or Medium",
+                    BookingPurpose.RecitalPrep => "Medium or Large",
+                    BookingPurpose.EnsembleRehearsal => "Large",
+                    _ => "any"
+                };
+                throw new InvalidOperationException(
+                    $"{booking.Purpose} bookings require {allowedTypes} rooms. Selected room is {room.Type}."
+                );
+            }
+        }
+
+        // Business logic: Validate equipment matches student's instrument
         var student = await _bookingRepository.GetStudentByIdAsync(booking.StudentId);
+        if (student != null && room != null)
+        {
+            // Check if student's instrument requires specific equipment
+            var requiredEquipment = GetRequiredEquipmentForInstrument(student.PrimaryInstrument, booking.Purpose);
+            if (requiredEquipment != null)
+            {
+                var roomEquipmentTypes = room.RoomEquipments
+                    .Where(re => !re.Equipment.IsDeleted)
+                    .Select(re => re.Equipment.Type)
+                    .ToList();
+
+                var hasRequiredEquipment = requiredEquipment.Any(req => roomEquipmentTypes.Contains(req));
+
+                if (!hasRequiredEquipment)
+                {
+                    var equipmentNames = string.Join(" or ", requiredEquipment.Select(e => e.ToString()));
+                    throw new InvalidOperationException(
+                        $"Student plays {student.PrimaryInstrument}. Selected room must have {equipmentNames}."
+                    );
+                }
+            }
+
+            // Check soundproofing for loud instruments
+            if (RequiresSoundproofing(student.PrimaryInstrument) && !room.IsSoundproof)
+            {
+                throw new InvalidOperationException(
+                    $"{student.PrimaryInstrument} requires a soundproof room to avoid disturbing others."
+                );
+            }
+        }
+
+        // Business logic: Check weekly quota
         if (student != null)
         {
             var weekStart = GetStartOfWeek(DateTime.UtcNow);
@@ -100,15 +176,9 @@ public class BookingService
             throw new InvalidOperationException($"The room is already booked for the selected time slot.");
         }
 
-        // Business logic: RecitalPrep must be booked at least 3 hours in advance
+        // Business logic: RecitalPrep requires instructor approval
         if (booking.Purpose == BookingPurpose.RecitalPrep)
         {
-            var hoursUntilBooking = (booking.StartTime - DateTime.UtcNow).TotalHours;
-            if (hoursUntilBooking < 3)
-            {
-                throw new InvalidOperationException("Recital prep bookings must be made at least 3 hours in advance.");
-            }
-
             booking.RequiresApproval = true;
         }
 
@@ -172,6 +242,12 @@ public class BookingService
             return false;
         }
 
+        // Check if booking requires approval and is not yet approved
+        if (booking.RequiresApproval && !booking.IsApproved)
+        {
+            throw new InvalidOperationException("Cannot check in: This booking requires instructor approval first.");
+        }
+
         booking.CheckedInAt = DateTime.UtcNow;
         booking.Status = BookingStatus.Completed;
         return await _bookingRepository.UpdateAsync(booking);
@@ -214,5 +290,42 @@ public class BookingService
     public async Task<List<Instructor>> GetAllInstructorsAsync()
     {
         return await _bookingRepository.GetAllInstructorsAsync();
+    }
+
+    private List<EquipmentType>? GetRequiredEquipmentForInstrument(InstrumentType instrument, BookingPurpose purpose)
+    {
+        return instrument switch
+        {
+            InstrumentType.Piano when purpose == BookingPurpose.RecitalPrep => 
+                new List<EquipmentType> { EquipmentType.GrandPiano },
+            InstrumentType.Piano => 
+                new List<EquipmentType> { EquipmentType.GrandPiano, EquipmentType.UprightPiano },
+            InstrumentType.Drums => 
+                new List<EquipmentType> { EquipmentType.Drums },
+            InstrumentType.Violin => 
+                new List<EquipmentType> { EquipmentType.Violin },
+            InstrumentType.Cello => 
+                new List<EquipmentType> { EquipmentType.Cello },
+            InstrumentType.Guitar => 
+                new List<EquipmentType> { EquipmentType.Guitar },
+            InstrumentType.Trumpet => 
+                new List<EquipmentType> { EquipmentType.Trumpet },
+            InstrumentType.Saxophone => 
+                new List<EquipmentType> { EquipmentType.Saxophone },
+            InstrumentType.Flute => 
+                new List<EquipmentType> { EquipmentType.Flute },
+            _ => null // Voice and Other don't require specific room equipment
+        };
+    }
+
+    private bool RequiresSoundproofing(InstrumentType instrument)
+    {
+        return instrument switch
+        {
+            InstrumentType.Drums => true,
+            InstrumentType.Trumpet => true,
+            InstrumentType.Saxophone => true,
+            _ => false
+        };
     }
 }

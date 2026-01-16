@@ -23,7 +23,13 @@ public class DataSeeder
             new Equipment { Name = "Pearl Export Drum Kit", Type = EquipmentType.Drums, Description = "5-piece drum set with cymbals" },
             new Equipment { Name = "Fender Guitar Amplifier", Type = EquipmentType.Amplifier, Description = "50W combo amp" },
             new Equipment { Name = "Shure SM58 Microphone", Type = EquipmentType.Microphone, Description = "Dynamic vocal microphone" },
-            new Equipment { Name = "Manhasset Music Stand", Type = EquipmentType.MusicStand, Description = "Professional music stand" }
+            new Equipment { Name = "Manhasset Music Stand", Type = EquipmentType.MusicStand, Description = "Professional music stand" },
+            new Equipment { Name = "Stradivarius Violin (Copy)", Type = EquipmentType.Violin, Description = "Professional violin" },
+            new Equipment { Name = "Yamaha Cello VC20G", Type = EquipmentType.Cello, Description = "Student cello" },
+            new Equipment { Name = "Fender Stratocaster", Type = EquipmentType.Guitar, Description = "Electric guitar" },
+            new Equipment { Name = "Bach Stradivarius Trumpet", Type = EquipmentType.Trumpet, Description = "Professional trumpet" },
+            new Equipment { Name = "Yamaha Alto Saxophone YAS-280", Type = EquipmentType.Saxophone, Description = "Student alto saxophone" },
+            new Equipment { Name = "Gemeinhardt Flute 3SHB", Type = EquipmentType.Flute, Description = "Intermediate flute" }
         };
         await context.Equipment.AddRangeAsync(equipment);
         await context.SaveChangesAsync();
@@ -112,6 +118,9 @@ public class DataSeeder
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[3].Id, Quantity = 1 }); // Upright piano
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[7].Id, Quantity = 4 }); // Music stands
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[6].Id, Quantity = 2 }); // Microphones
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[8].Id, Quantity = 1 }); // Violin
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[9].Id, Quantity = 1 }); // Cello
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[12].Id, Quantity = 1 }); // Flute
         }
         
         // Large rooms - full band setup
@@ -122,6 +131,12 @@ public class DataSeeder
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[5].Id, Quantity = 2 }); // Amplifiers
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[6].Id, Quantity = 4 }); // Microphones
             roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[7].Id, Quantity = 8 }); // Music stands
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[8].Id, Quantity = 2 }); // Violin
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[9].Id, Quantity = 1 }); // Cello
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[10].Id, Quantity = 1 }); // Guitar
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[11].Id, Quantity = 1 }); // Trumpet
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[12].Id, Quantity = 1 }); // Saxophone
+            roomEquipments.Add(new RoomEquipment { RoomId = rooms[i].Id, EquipmentId = equipment[13].Id, Quantity = 1 }); // Flute
         }
         
         await context.RoomEquipments.AddRangeAsync(roomEquipments);

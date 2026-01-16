@@ -7,11 +7,11 @@ using WebApp.Models;
 
 namespace WebApp.Pages.Bookings;
 
-public class CreateModel : PageModel
+public class EditModel : PageModel
 {
     private readonly BookingService _bookingService;
 
-    public CreateModel(BookingService bookingService)
+    public EditModel(BookingService bookingService)
     {
         _bookingService = bookingService;
     }
@@ -23,9 +23,27 @@ public class CreateModel : PageModel
     public SelectList RoomSelectList { get; set; } = null!;
     public SelectList InstructorSelectList { get; set; } = null!;
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(int id)
     {
+        var booking = await _bookingService.GetByIdAsync(id);
+        if (booking == null)
+        {
+            return NotFound();
+        }
+
+        Input = new BookingInputModel
+        {
+            Id = booking.Id,
+            StudentId = booking.StudentId,
+            RoomId = booking.RoomId,
+            StartTime = booking.StartTime,
+            EndTime = booking.EndTime,
+            Purpose = booking.Purpose,
+            ApprovedByInstructorId = booking.ApprovedByInstructorId
+        };
+
         await LoadDropdownsAsync();
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -36,19 +54,29 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        var booking = new Booking
+        var booking = await _bookingService.GetByIdAsync(Input.Id);
+        if (booking == null)
         {
-            StudentId = Input.StudentId,
-            RoomId = Input.RoomId,
-            StartTime = Input.StartTime,
-            EndTime = Input.EndTime,
-            Purpose = Input.Purpose,
-            ApprovedByInstructorId = Input.ApprovedByInstructorId
-        };
+            return NotFound();
+        }
+
+        booking.StudentId = Input.StudentId;
+        booking.RoomId = Input.RoomId;
+        booking.StartTime = Input.StartTime;
+        booking.EndTime = Input.EndTime;
+        booking.Purpose = Input.Purpose;
+        booking.ApprovedByInstructorId = Input.ApprovedByInstructorId;
+
+        // If instructor is added and booking requires approval, mark as approved
+        if (booking.RequiresApproval && Input.ApprovedByInstructorId.HasValue && !booking.IsApproved)
+        {
+            booking.IsApproved = true;
+            booking.ApprovedAt = DateTime.UtcNow;
+        }
 
         try
         {
-            await _bookingService.CreateAsync(booking);
+            await _bookingService.UpdateAsync(booking);
             return RedirectToPage("./Index");
         }
         catch (InvalidOperationException ex)

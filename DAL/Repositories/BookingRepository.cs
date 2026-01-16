@@ -134,8 +134,18 @@ public class BookingRepository : IBookingRepository
     public async Task<List<Room>> GetAllRoomsAsync()
     {
         return await _context.Rooms
+            .Include(r => r.RoomEquipments)
+                .ThenInclude(re => re.Equipment)
             .OrderBy(r => r.Name)
             .ToListAsync();
+    }
+
+    public async Task<Room?> GetRoomByIdAsync(int roomId)
+    {
+        return await _context.Rooms
+            .Include(r => r.RoomEquipments)
+                .ThenInclude(re => re.Equipment)
+            .FirstOrDefaultAsync(r => r.Id == roomId && !r.IsDeleted);
     }
 
     public async Task<List<Instructor>> GetAllInstructorsAsync()

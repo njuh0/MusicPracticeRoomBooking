@@ -35,8 +35,17 @@ public class DetailsModel : PageModel
 
     public async Task<IActionResult> OnPostCheckInAsync(int id)
     {
-        await _bookingService.CheckInAsync(id);
-        return RedirectToPage("./Details", new { id });
+        try
+        {
+            await _bookingService.CheckInAsync(id);
+            return RedirectToPage("./Details", new { id });
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            Booking = (await _bookingService.GetByIdAsync(id))!;
+            return Page();
+        }
     }
 
     public async Task<IActionResult> OnPostCancelAsync(int id)

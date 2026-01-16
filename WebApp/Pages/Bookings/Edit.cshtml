@@ -1,17 +1,19 @@
 @page
-@model WebApp.Pages.Bookings.CreateModel
+@model WebApp.Pages.Bookings.EditModel
 @{
-    ViewData["Title"] = "Create Booking";
+    ViewData["Title"] = "Edit Booking";
 }
 
 <div class="container mt-4">
-    <h1>Create New Booking</h1>
+    <h1>Edit Booking</h1>
 
     <div class="row">
         <div class="col-md-8">
             <form method="post" class="card">
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <input type="hidden" asp-for="Input.Id" />
 
                     <div class="mb-3">
                         <label asp-for="Input.StudentId" class="form-label"></label>
@@ -58,12 +60,12 @@
                             <option value="">-- Select Instructor (Optional) --</option>
                         </select>
                         <span asp-validation-for="Input.ApprovedByInstructorId" class="text-danger"></span>
-                        <div class="form-text">Required for Recital Prep bookings.</div>
+                        <div class="form-text">Required for Recital Prep bookings. Adding instructor will automatically approve the booking.</div>
                     </div>
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Create Booking
+                            <i class="bi bi-save"></i> Save Changes
                         </button>
                         <a asp-page="Index" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancel
@@ -76,25 +78,13 @@
         <div class="col-md-4">
             <div class="card bg-light">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Booking Guidelines</h5>
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Edit Guidelines</h5>
                     <ul class="mb-0">
-                        <li><strong>Regular Practice</strong>: Individual sessions, max 2 hours</li>
-                        <li><strong>Recital Prep</strong>: Max 3-hour blocks, requires instructor approval</li>
-                        <li><strong>Ensemble Rehearsal</strong>: Group practice, max 4 hours</li>
-                        <li>Bookings must be made for future times</li>
-                        <li>Room availability is checked automatically</li>
-                        <li>Check your weekly practice quota before booking</li>
+                        <li>You can update student, room, times, and instructor</li>
+                        <li>For Recital Prep bookings, adding an instructor will automatically approve the booking</li>
+                        <li>Time changes are validated for conflicts</li>
+                        <li>Duration limits still apply based on purpose</li>
                     </ul>
-                </div>
-            </div>
-
-            <div class="card bg-warning bg-opacity-10 mt-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-exclamation-triangle"></i> Important</h5>
-                    <p class="mb-0">
-                        <strong>No-shows</strong> are tracked and may result in quota penalties. 
-                        Please check in when you arrive, or cancel bookings you cannot attend.
-                    </p>
                 </div>
             </div>
         </div>
