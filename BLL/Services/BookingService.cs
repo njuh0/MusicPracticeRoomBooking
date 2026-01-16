@@ -14,6 +14,8 @@ public class BookingService
 
     public async Task<List<Booking>> GetAllAsync()
     {
+        // Automatically mark NoShows before returning bookings
+        await _bookingRepository.MarkExpiredBookingsAsNoShowAsync();
         return await _bookingRepository.GetAllAsync();
     }
 
@@ -24,6 +26,7 @@ public class BookingService
 
     public async Task<List<Booking>> GetByStudentIdAsync(int studentId)
     {
+        await _bookingRepository.MarkExpiredBookingsAsNoShowAsync();
         return await _bookingRepository.GetByStudentIdAsync(studentId);
     }
 

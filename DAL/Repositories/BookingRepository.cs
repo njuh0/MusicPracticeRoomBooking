@@ -139,4 +139,14 @@ public class BookingRepository : IBookingRepository
             .ThenBy(i => i.FirstName)
             .ToListAsync();
     }
+
+    public async Task<int> MarkExpiredBookingsAsNoShowAsync()
+    {
+        return await _context.Bookings
+            .Where(b => b.Status == BookingStatus.Confirmed
+                     && b.EndTime < DateTime.UtcNow
+                     && !b.CheckedInAt.HasValue
+                     && !b.IsDeleted)
+            .ExecuteUpdateAsync(b => b.SetProperty(x => x.Status, BookingStatus.NoShow));
+    }
 }
