@@ -1,4 +1,6 @@
+using BLL.Services;
 using DAL;
+using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,12 @@ builder.Services.AddRazorPages();
 // Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register DAL Repositories
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+
+// Register BLL Services
+builder.Services.AddScoped<StudentService>();
 
 var app = builder.Build();
 

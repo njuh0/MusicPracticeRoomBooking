@@ -1,0 +1,158 @@
+@page
+@model WebApp.Pages.Students.DetailsModel
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Student Details</h1>
+        <div>
+            <a asp-page="Edit" asp-route-id="@Model.Student.Id" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-page="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Student Number</dt>
+                        <dd class="col-sm-8">@Model.Student.StudentNumber</dd>
+
+                        <dt class="col-sm-4">Name</dt>
+                        <dd class="col-sm-8">@Model.Student.FirstName @Model.Student.LastName</dd>
+
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">@Model.Student.Email</dd>
+
+                        <dt class="col-sm-4">Program</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-@(Model.Student.Program == DAL.Entities.StudentProgram.PerformanceMajor ? "primary" : Model.Student.Program == DAL.Entities.StudentProgram.EducationMajor ? "success" : "secondary")">
+                                @Model.Student.Program
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Primary Instrument</dt>
+                        <dd class="col-sm-8">@Model.Student.PrimaryInstrument</dd>
+
+                        <dt class="col-sm-4">Instructor</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Student.Instructor != null)
+                            {
+                                <text>@Model.Student.Instructor.FirstName @Model.Student.Instructor.LastName</text>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not assigned</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Practice Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-6">Weekly Quota</dt>
+                        <dd class="col-sm-6">@Model.Student.WeeklyQuotaHours hours</dd>
+
+                        <dt class="col-sm-6">Penalty Hours</dt>
+                        <dd class="col-sm-6">
+                            @if (Model.Student.QuotaPenaltyHours > 0)
+                            {
+                                <span class="text-danger">
+                                    -@Model.Student.QuotaPenaltyHours hours
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-success">0 hours</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6">Effective Quota</dt>
+                        <dd class="col-sm-6">
+                            <strong>@Model.Student.EffectiveWeeklyQuota hours</strong>
+                        </dd>
+
+                        <dt class="col-sm-6">Total Logged Hours</dt>
+                        <dd class="col-sm-6">@Model.Student.TotalLoggedHours hours</dd>
+
+                        <dt class="col-sm-6">No-Show Count</dt>
+                        <dd class="col-sm-6">
+                            @if (Model.Student.NoShowCount > 0)
+                            {
+                                <span class="text-danger">@Model.Student.NoShowCount</span>
+                            }
+                            else
+                            {
+                                <span class="text-success">0</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Booking History</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Student.Bookings.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Duration</th>
+                                <th>Purpose</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model.Student.Bookings.OrderByDescending(b => b.StartTime).Take(10))
+                            {
+                                <tr>
+                                    <td>@booking.Room?.Name</td>
+                                    <td>@booking.StartTime.ToString("yyyy-MM-dd")</td>
+                                    <td>@booking.StartTime.ToString("HH:mm") - @booking.EndTime.ToString("HH:mm")</td>
+                                    <td>@booking.DurationHours hours</td>
+                                    <td>@booking.Purpose</td>
+                                    <td>
+                                        <span class="badge bg-@(booking.Status == DAL.Entities.BookingStatus.Confirmed ? "success" : booking.Status == DAL.Entities.BookingStatus.Cancelled ? "secondary" : booking.Status == DAL.Entities.BookingStatus.NoShow ? "danger" : "info")">
+                                            @booking.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No bookings yet.</p>
+            }
+        </div>
+    </div>
+</div>

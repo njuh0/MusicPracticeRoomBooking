@@ -1,0 +1,83 @@
+@page
+@model WebApp.Pages.Students.CreateModel
+@{
+    ViewData["Title"] = "Create Student";
+}
+
+<div class="container mt-4">
+    <h1>Create Student</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Student.FirstName" class="form-label"></label>
+                        <input asp-for="Student.FirstName" class="form-control" />
+                        <span asp-validation-for="Student.FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Student.LastName" class="form-label"></label>
+                        <input asp-for="Student.LastName" class="form-control" />
+                        <span asp-validation-for="Student.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Student.Email" class="form-label"></label>
+                    <input asp-for="Student.Email" class="form-control" type="email" />
+                    <span asp-validation-for="Student.Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Student.StudentNumber" class="form-label"></label>
+                    <input asp-for="Student.StudentNumber" class="form-control" />
+                    <span asp-validation-for="Student.StudentNumber" class="text-danger"></span>
+                    <div class="form-text">Format: PM2024001, EM2024001, or MN2024001</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Student.Program" class="form-label"></label>
+                        <select asp-for="Student.Program" class="form-select" asp-items="Html.GetEnumSelectList<DAL.Entities.StudentProgram>()">
+                            <option value="">-- Select Program --</option>
+                        </select>
+                        <span asp-validation-for="Student.Program" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Student.PrimaryInstrument" class="form-label"></label>
+                        <select asp-for="Student.PrimaryInstrument" class="form-select" asp-items="Html.GetEnumSelectList<DAL.Entities.InstrumentType>()">
+                            <option value="">-- Select Instrument --</option>
+                        </select>
+                        <span asp-validation-for="Student.PrimaryInstrument" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Student.InstructorId" class="form-label"></label>
+                    <select asp-for="Student.InstructorId" class="form-select" asp-items="Model.InstructorSelectList">
+                        <option value="">-- No Instructor --</option>
+                    </select>
+                    <span asp-validation-for="Student.InstructorId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Create
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
